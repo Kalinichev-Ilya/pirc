@@ -1,5 +1,7 @@
 /src/.bundle
 
+.idea/
+
 /src/log/*
 /src/tmp/*
 !/src/log/.keep
