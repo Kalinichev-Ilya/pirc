@@ -1,0 +1,20 @@
+default: &default
+  adapter: postgresql
+  username: <%= ENV.fetch('POSTGRES_USER') %>
+  password: <%= ENV.fetch('POSTGRES_PASSWORD') %>
+  host: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: pirc_development
+
+test:
+  <<: *default
+  database: pirc_test
+
+production:
+  <<: *default
+  database: pirc_production
+  username: pirc
+  password: <%= ENV['PIRC_DATABASE_PASSWORD'] %>
