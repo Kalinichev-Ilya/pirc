@@ -1,0 +1,8 @@
+/src/.bundle
+
+/src/log/*
+/src/tmp/*
+!/src/log/.keep
+!/src/tmp/.keep
+
+.env
