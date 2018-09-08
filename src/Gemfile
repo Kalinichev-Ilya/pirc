@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 ruby '2.5.1'
@@ -20,9 +22,10 @@ gem 'pg', '1.1.2 '
 gem 'bcrypt', '~> 3.1.12'
 
 group :development, :test do
-  gem 'rspec-rails'
-
-  gem 'factory_bot', '4.11.0'
+  gem 'factory_bot_rails', '4.11.0'
   gem 'faker'
+  gem 'pry'
+  gem 'rspec-rails'
+  gem 'rubocop', require: false
+  gem 'rubocop-rspec'
 end
-

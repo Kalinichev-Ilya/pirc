@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateChannelOptions < ActiveRecord::Migration[5.2]
   def change
     create_table :channel_options, id: :uuid do |t|
