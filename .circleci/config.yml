@@ -1,0 +1,19 @@
+version: 2
+
+jobs:
+  build:
+    parallelism: 2
+    working_directory: ~/src
+    docker:
+      - image: circleci/ruby:2.5.1-node
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: pirc
+
+    steps:
+      - checkout
+      - run: gem install bundler
+      - run: bundle config github.https true && bundle check --path=vendor/bundle || BUNDLE_GEMFILE="src/Gemfile" bundle install --path=vendor/bundle --jobs=4 --retry=3
+      - run: bundle exec rake -f src/Rakefile -T db:create db:schema:load --trace
+      - run: cd src; bundle exec rubocop
+      - run: cd src; bundle exec rspec
