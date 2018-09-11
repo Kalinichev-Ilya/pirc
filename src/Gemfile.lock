@@ -50,6 +50,8 @@ GEM
       thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.12)
     builder (3.2.3)
+    codeclimate-engine-rb (0.4.1)
+      virtus (~> 1.0)
     coderay (1.1.2)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
@@ -88,6 +90,7 @@ GEM
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     jaro_winkler (1.5.1)
+    kwalify (0.7.2)
     loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -148,6 +151,11 @@ GEM
       thor (>= 0.19.0, < 2.0)
     rainbow (3.0.0)
     rake (12.3.1)
+    reek (5.0.2)
+      codeclimate-engine-rb (~> 0.4.0)
+      kwalify (~> 0.7.0)
+      parser (>= 2.5.0.0, < 2.6, != 2.5.1.1)
+      rainbow (>= 2.0, < 4.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.1)
@@ -212,6 +220,7 @@ DEPENDENCIES
   puma
   rack-cors
   rails (~> 5.2.1)
+  reek
   rspec-rails
   rubocop
   rubocop-rspec

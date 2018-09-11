@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require File.expand_path('../boot', __FILE__)
+require File.expand_path('boot', __dir__)
 
 require 'rails/all'
 # Pick the frameworks you want:
@@ -35,14 +35,14 @@ module Pirc
     config.api_only = true
 
     # change id to uuid in models
-    config.generators do |g|
-      g.orm :active_record, primary_key_type: :uuid
+    config.generators do |gen|
+      gen.orm :active_record, primary_key_type: :uuid
     end
 
     # Grape API
     config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
     config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
-    
+
     # Rack Cors
     config.middleware.insert_before 0, Rack::Cors do
       allow do
