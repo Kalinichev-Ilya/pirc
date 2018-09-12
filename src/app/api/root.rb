@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Root < Grape::API
+  include V1::Errors
+  include V1::Helpers::ErrorHandler
+
   prefix :api
   version :v1, using: :path
 
@@ -18,6 +21,6 @@ class Root < Grape::API
   )
 
   route :any, '*path' do
-    raise Errors::NotFound, "No such route '#{request.path}'"
+    error!(Errors::NotFoundError.new, 404)
   end
 end
