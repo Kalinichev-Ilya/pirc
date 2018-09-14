@@ -12,8 +12,8 @@ RSpec.describe V1::Users::Create do
   context 'POST /api/v1/users' do
     let(:params) { attributes_for(:user) }
 
-    it 'returns code 200' do
-      post '/api/v1/users', params: params
+    it 'returns code 201' do
+      post '/api/v1/users', params
 
       expect(last_response.status).to eq(201)
     end

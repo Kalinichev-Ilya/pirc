@@ -8,3 +8,5 @@
 !/src/tmp/.keep
 
 .env
+
+/src/coverage/*
