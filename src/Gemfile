@@ -26,11 +26,19 @@ group :development, :test do
   gem 'faker'
   gem 'pry'
 
+  gem 'codecov', require: false
   gem 'rspec-rails'
 end
 
 group :development do
-  gem 'reek'
+  gem 'rspec_junit_formatter'
+
+  gem 'reek', require: false
   gem 'rubocop', require: false
-  gem 'rubocop-rspec'
+  gem 'rubocop-rspec', require: false
+
+  # https://github.com/aderyabin/sniffer
+  # Sniffer.enable!
+  # Sniffer.data[0].to_h
+  gem 'sniffer', require: false
 end

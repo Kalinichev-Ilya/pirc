@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     parallelism: 2
-    working_directory: ~/src
+    working_directory: ~/project/src
     docker:
       - image: circleci/ruby:2.5.1-node
       - image: circleci/postgres:9.5-alpine
@@ -11,9 +11,20 @@ jobs:
           POSTGRES_USER: pirc
 
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
+      - restore_cache:
+          keys:
+            - bundle-dependecies-{{ checksum "Gemfile.lock" }}
+            - bundle-dependecies-
       - run: gem install bundler
-      - run: bundle config github.https true && bundle check --path=vendor/bundle || BUNDLE_GEMFILE="src/Gemfile" bundle install --path=vendor/bundle --jobs=4 --retry=3
-      - run: bundle exec rake -f src/Rakefile -T db:create db:schema:load --trace
-      - run: cd src; bundle exec rubocop
-      - run: cd src; bundle exec rspec
+      - run: bundle config github.https true && bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs=4 --retry=3
+      - save_cache:
+          key: bundle-dependecies-{{ checksum "Gemfile.lock" }}
+          paths:
+            - ./vendor/bundle
+      - run: bundle exec rake db:create db:schema:load --trace
+      - run: bundle exec rubocop --rails
+      - run: bundle exec rspec --format progress --format RspecJunitFormatter -o ~/rspec/rspec.xml
+      - store_test_results:
+          path: ~/rspec
