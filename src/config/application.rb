@@ -39,9 +39,7 @@ module Pirc
       gen.orm :active_record, primary_key_type: :uuid
     end
 
-    # Grape API
-    config.paths.add File.join('app', 'api'), glob: File.join('**', '*.rb')
-    config.autoload_paths += Dir[Rails.root.join('app', 'api', '*')]
+    config.autoload_paths << Rails.root.join('app')
 
     # Rack Cors
     config.middleware.insert_before 0, Rack::Cors do

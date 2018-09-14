@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 class Root < Grape::API
-  include V1::Errors
-  include V1::Helpers::ErrorHandler
+  include API::V1::Errors
+  include API::V1::Helpers::ErrorHandler
 
   prefix :api
   version :v1, using: :path
 
   format :json
 
-  mount V1::Base
+  mount API::V1::Base
 
   add_swagger_documentation(
     add_version:             true,
@@ -21,6 +21,6 @@ class Root < Grape::API
   )
 
   route :any, '*path' do
-    error!(Errors::NotFoundError.new, 404)
+    error!(NotFound, 404)
   end
 end

@@ -4,9 +4,9 @@ require 'rails_helper'
 
 RSpec.describe ChannelOption do
   describe '#create' do
-    subject(:option) { build(:channel_option) }
-
     context 'with valid params' do
+      subject(:option) { build(:channel_option) }
+
       it 'success' do
         expect(option).to be_valid
       end

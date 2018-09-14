@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_905_201_104) do
+ActiveRecord::Schema.define(version: 2018_09_05_201104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20_180_905_201_104) do
   create_table 'channel_options', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
     t.uuid 'user_id', null: false
     t.uuid 'channel_id', null: false
-    t.boolean 'is_favorite', default: false
+    t.boolean 'is_favorite', default: false, null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false
     t.index ['channel_id'], name: 'index_channel_options_on_channel_id'
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20_180_905_201_104) do
   end
 
   create_table 'users', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
-    t.string 'username', limit: 15, null: false
+    t.string 'username', null: false
     t.string 'password_digest', null: false
     t.datetime 'created_at', null: false
     t.datetime 'updated_at', null: false

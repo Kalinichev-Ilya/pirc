@@ -2,20 +2,32 @@
 
 require 'rails_helper'
 
-RSpec.describe V1::Users::Create do
+RSpec.describe API::V1::Users::Create do
   include Rack::Test::Methods
 
   def app
-    V1::Users::Create
+    API::V1::Users::Create
   end
 
-  context 'POST /api/v1/users' do
-    let(:params) { attributes_for(:user) }
+  describe 'POST /api/v1/users' do
+    context 'valid' do
+      let(:params) { attributes_for(:user) }
 
-    it 'returns code 201' do
-      post '/api/v1/users', params
+      it 'returns code 201' do
+        post '/api/v1/users', params
 
-      expect(last_response.status).to eq(201)
+        expect(last_response.status).to eq(201)
+      end
+    end
+
+    context 'failure' do
+      let(:params) { attributes_for(:user, :invalid) }
+
+      it 'returns validation error status 422' do
+        post '/api/v1/users', params
+
+        expect(last_response.status).to eq(422)
+      end
     end
   end
 end
