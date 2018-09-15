@@ -7,5 +7,5 @@ class User < ApplicationRecord
   has_secure_password
 
   validates :username, :password_digest, presence: true
-  validates :username, length: { maximum: 15 }
+  validates :username, length: { minimum: 4, maximum: 15 }
 end
