@@ -4,11 +4,11 @@ module API
   module V1
     module Users
       class Create < Grape::API
-        namespace :users do
+        version :v1 do
           # POST /api/v1/users
           desc 'Create new user account',
             named:   'create',
-            success: { code: 201, model: API::V1::Entities::User }
+            success: { code: 201, model: API::V1::Entities::User::V1 }
           params do
             requires :username, type: String
             requires :password_digest, type: String
@@ -17,7 +17,7 @@ module API
             attributes = declared(params).to_h
 
             present ::User.create!(attributes).reload,
-              with: API::V1::Entities::User
+              with: API::V1::Entities::User::V1
           end
         end
       end
