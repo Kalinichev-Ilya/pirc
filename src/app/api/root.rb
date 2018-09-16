@@ -5,11 +5,10 @@ class Root < Grape::API
   include API::V1::Helpers::ErrorHandler
 
   prefix :api
-  version :v1, using: :path
 
   format :json
 
-  mount API::V1::Base
+  mount API::V1::Root
 
   add_swagger_documentation(
     add_version:             true,
