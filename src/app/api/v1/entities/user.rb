@@ -7,7 +7,7 @@ module API
         class V1 < Base
           expose :id
           expose :username
-          expose :password_digest
+          expose :password
         end
       end
     end

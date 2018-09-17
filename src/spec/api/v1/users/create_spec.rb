@@ -14,6 +14,7 @@ RSpec.describe API::V1::Users::Create do
       let(:params) { attributes_for(:user) }
 
       it 'returns code 201' do
+        binding.pry
         post '/api/v1/users', params
 
         expect(last_response.status).to eq(201)

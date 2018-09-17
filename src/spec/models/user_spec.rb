@@ -6,14 +6,14 @@ RSpec.describe User do
   describe '#create' do
     subject(:user) { build(:user) }
 
-    context 'with valid password' do
+    context 'with valid password', focus: true do
       it 'success' do
         expect(user).to be_valid
       end
     end
 
-    context 'with invalid password' do
-      subject(:user) { build(:user, password_digest: '') }
+    context 'with weak password' do
+      subject(:user) { build(:user, :weak_pass) }
 
       it 'failure' do
         expect(user).to be_invalid

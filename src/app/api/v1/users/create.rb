@@ -11,7 +11,7 @@ module API
             success: { code: 201, model: API::V1::Entities::User::V1 }
           params do
             requires :username, type: String
-            requires :password_digest, type: String
+            requires :password, type: String
           end
           post do
             attributes = declared(params).to_h
