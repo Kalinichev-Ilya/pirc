@@ -20,10 +20,6 @@ class User < ApplicationRecord
 
   private
 
-  def generate_token
-    AccessToken.generate(self)
-  end
-
   def encode_password
     self.password = Digest::SHA2.hexdigest(password)
   end
