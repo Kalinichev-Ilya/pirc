@@ -3,52 +3,44 @@
 module API
   module V1
     module Helpers
-      class Authenticator
-        extend ActiveSupport::Concern
-
-        def self.authenticate(email:, password:, devise_params:)
+      class Authenticator < Struct.new(:user, :request_password, :device_params)
+        def self.authenticate(email:, request_password:, device_params:)
           user = User.find_by!(email: email)
 
-          check_device(user, devise_params) && invalid_password?(user, password) ? success(user) : failure(:invalid_email_or_password)
+          Authenticator.new(user, request_password, device_params).validate
         end
 
         private
 
-        def check_device(user, device_params)
-          if verification_needed?(user, device_params)
-            failure(:device_verification_needed)
-          end
+        def validate
+          current_device? && valid_password? ? success : failure(:invalid_email_or_password)
         end
 
-        def verification_needed?(user, device_params)
-          user.token.nil? || user.token.fingerprint != device_params[:fingerprint]
+        def current_device?
+          already_verified? || failure(:device_verification_needed)
         end
 
-        def invalid_password?(user, password)
-          user.password != encode(password)
+        def already_verified?
+          user.token && user.token.fingerprint == device_params[:fingerprint]
+        end
+
+        def valid_password?
+          user.password == encode(request_password)
         end
 
         def encode(string)
           Digest::SHA2.hexdigest(string)
         end
 
-        def success(user, device = nil)
-          Result.new(user, device)
+        def success
+          Result.new(user)
         end
 
         def failure(error)
-          Result.new(nil, nil, error)
+          Result.new(nil, error)
         end
 
-        Result = Struct.new(:user, :device, :error) do
-          def success?
-            !error
-          end
-
-          def failure?
-            !!error
-          end
-        end
+        Result = Struct.new(:user, :error)
       end
     end
   end
