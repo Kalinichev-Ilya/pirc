@@ -4,13 +4,12 @@ module API
   module V1
     module Auth
       class Create < Grape::API
-
         helpers do
           def authenticate
             Authenticator.authenticate(
-                email:         params[:email],
-                password:      params[:password],
-                devise_params: device_params
+                email:            params[:email],
+                request_password: params[:password],
+                devise_params:    device_params
             )
           end
 
@@ -29,20 +28,18 @@ module API
           # POST /api/v1/auth
           desc 'Authenticate a user',
                named:   'authenticate',
-               success: { code: 201, model: API::Entities::Auth::V1 }
+               success: { code: 201, model: API::V1::Entities::Auth }
           params do
             requires :username, type: String
             requires :password, type: String
             requires :devise, type: Hash do
               requires :fingerprint, type: String
-              optional :os, type: String
-              optional :browser, type: String
             end
           end
           post do
             result = authenticate
             error! authenticator_error(result.error), 401 if result.failure?
-            present create_access_token!(result.user), with: API::Entities::Auth::V1
+            present create_access_token!(result.user), with: API::V1::Entities::Auth
           end
         end
       end
