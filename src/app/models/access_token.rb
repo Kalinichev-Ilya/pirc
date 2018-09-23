@@ -10,11 +10,14 @@ class AccessToken < ApplicationRecord
 
   scope :active, -> { where('expires_at > ?', Time.current) }
 
-  def self.generate!(fingerprint)
+  def self.generate!(user, device_params)
     AccessToken.transaction do
-      essence_hash     = username + email + ip_address + time_stamp
-      fingerprint_hash = encode(fingerprint)
-      expires_at       = Time.current + EXPIRES_IN
+      time_current = Time.current
+
+      essence_hash     = encrypt_essence(user, device_params[:ip], time_current)
+
+      fingerprint_hash = encode(device_params[:fingerprint].to_s)
+      expires_at       = time_current + EXPIRES_IN
 
       AccessToken.create!(
           essence:     essence_hash,
@@ -28,6 +31,11 @@ class AccessToken < ApplicationRecord
 
   def active?
     expires_at > Time.current
+  end
+
+  def self.encrypt_essence(user, ip, time_stamp)
+    essence_string = "#{user.username}:#{ip}:#{time_stamp.to_i}"
+    encode(essence_string)
   end
 
   def self.encode(string)

@@ -6,21 +6,16 @@ module API
       class Create < Grape::API
         helpers do
           def authenticate
-            Authenticator.authenticate(
-                email:            params[:email],
-                request_password: params[:password],
-                devise_params:    device_params
-            )
+            Operations::Auth::Validate.call(params)
+          end
+
+          def create_access_token!
+            AccessToken.generate!(device_params)
           end
 
           def device_params
-            declared(params).tap do |params|
-              params[:ip] = request.ip
-            end
-          end
-
-          def create_access_token!(user)
-            AccessToken.generate(user, device_params)
+            { ip:          request.ip,
+              fingerprint: params[:devise][:fingerprint] }
           end
         end
 
