@@ -6,7 +6,7 @@ module Operations
       def self.call(email:, request_password:, device_params:)
         user = User.find_by!(email: email)
 
-        Authenticator.new(user, request_password, device_params).validate
+        Operations::Auth::Create.new(user, request_password, device_params).validate
       end
 
       private

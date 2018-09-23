@@ -1,46 +1,33 @@
 class AccessToken < ApplicationRecord
   EXPIRES_IN = 1.hour
 
-  attr_accessor :token_hash
+  # attr_accessor :token_hash
 
-  belongs_to :user
+  has_one :user
 
   validates :expires_at, presence: true
-  validates :token_hash, presence: true, uniqueness: true
+  validates :essence, presence: true, uniqueness: true
 
   scope :active, -> { where('expires_at > ?', Time.current) }
 
-  def self.generate(user, device_params)
+  def self.generate!(fingerprint)
     AccessToken.transaction do
-      decoded_token = "#{user.username}:#{user.password}:#{current_time.to_i}"
-
-      token_hash = encode(decoded_token)
-      expires_at = current_time + EXPIRES_IN
-
-      fingerprint_hash = encode(device_params[:device_params])
+      essence_hash     = username + email + ip_address + time_stamp
+      fingerprint_hash = encode(fingerprint)
+      expires_at       = Time.current + EXPIRES_IN
 
       AccessToken.create!(
-          user:       user,
-          token_hash: token_hash,
+          essence:     essence_hash,
           fingerprint: fingerprint_hash,
-          expires_at: expires_at
+          expires_at:  expires_at
       )
     end
   end
 
-  def valid?(token)
-    return false if active.nil?
-
-    decoded_token = "#{user.auth_time}:#{user.email}:#{token}"
-    encoded_token = encode(decoded_token)
-
-    user.token.token_hash == encoded_token
-  end
-
   private
 
-  def self.current_time
-    Time.current.beginning_of_minute
+  def active?
+    expires_at > Time.current
   end
 
   def self.encode(string)

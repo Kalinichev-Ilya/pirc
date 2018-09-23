@@ -10,20 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_05_201105) do
+ActiveRecord::Schema.define(version: 2018_09_05_201106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
 
   create_table "access_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
-    t.string "token_hash", null: false
+    t.string "essence", null: false
     t.string "fingerprint"
     t.datetime "expires_at", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_access_tokens_on_user_id"
   end
 
   create_table "channel_options", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -61,13 +59,15 @@ ActiveRecord::Schema.define(version: 2018_09_05_201105) do
     t.string "password_digest", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.uuid "access_token_id"
+    t.index ["access_token_id"], name: "index_users_on_access_token_id"
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
-  add_foreign_key "access_tokens", "users"
   add_foreign_key "channel_options", "channels"
   add_foreign_key "channel_options", "users"
   add_foreign_key "channels", "users", column: "owner_id"
   add_foreign_key "messages", "channels"
   add_foreign_key "messages", "users"
+  add_foreign_key "users", "access_tokens"
 end

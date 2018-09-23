@@ -4,7 +4,7 @@ class User < ApplicationRecord
   has_many :channels, through: :channel_options
   has_many :messages, dependent: :destroy
 
-  has_one :access_token, -> { active }, as: :token
+  belongs_to :access_token, -> { active }
 
   has_secure_password
 
