@@ -5,14 +5,14 @@ require 'rails_helper'
 RSpec.describe AccessToken do
   let(:token) { build(:token) }
 
+  let(:device_params) { { ip: Faker::Internet.ip_v4_address, fingerprint: rand(10000..999999) } }
+  let(:user) { build(:user) }
+
   it 'instance return valid true' do
-    expect(token.valid?).to be_truthy
+    expect(token).to be_valid
   end
 
-  let(:user) { build(:user) }
-  let(:device_params) { { ip: Faker::Internet.ip_v4_address, fingerprint: rand(10000..999999) } }
-
-  it 'success generate', focus: true do
-    expect(AccessToken.generate!(user, device_params)).to be_a(AccessToken)
+  it 'success generate' do
+    expect(described_class.generate!(user, device_params)).to be_a(described_class)
   end
 end

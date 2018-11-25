@@ -1,9 +1,7 @@
+# frozen_string_literal: true
+
 class AccessToken < ApplicationRecord
   EXPIRES_IN = 1.hour
-
-  # attr_accessor :token_hash
-
-  has_one :user
 
   validates :expires_at, presence: true
   validates :essence, presence: true, uniqueness: true
@@ -14,16 +12,11 @@ class AccessToken < ApplicationRecord
     AccessToken.transaction do
       time_current = Time.current
 
-      essence_hash     = encrypt_essence(user, device_params[:ip], time_current)
-
+      essence_hash = encrypt_essence(user, device_params[:ip], time_current.to_i)
       fingerprint_hash = encode(device_params[:fingerprint].to_s)
-      expires_at       = time_current + EXPIRES_IN
+      expires_at = time_current + EXPIRES_IN
 
-      AccessToken.create!(
-          essence:     essence_hash,
-          fingerprint: fingerprint_hash,
-          expires_at:  expires_at
-      )
+      AccessToken.create!(essence: essence_hash, fingerprint: fingerprint_hash, expires_at: expires_at)
     end
   end
 
@@ -34,7 +27,7 @@ class AccessToken < ApplicationRecord
   end
 
   def self.encrypt_essence(user, ip, time_stamp)
-    essence_string = "#{user.username}:#{ip}:#{time_stamp.to_i}"
+    essence_string = "#{user.username}:#{ip}:#{time_stamp}"
     encode(essence_string)
   end
 

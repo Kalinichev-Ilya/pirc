@@ -6,11 +6,15 @@ module API
       class Create < Grape::API
         helpers do
           def authenticate
+            params.tap do |params|
+              params[:device][:ip] = device_params[:ip]
+            end
+
             Operations::Auth::Validate.call(params)
           end
 
-          def create_access_token!
-            AccessToken.generate!(device_params)
+          def create_access_token!(user)
+            AccessToken.generate!(user, device_params)
           end
 
           def device_params
@@ -22,12 +26,12 @@ module API
         version :v1 do
           # POST /api/v1/auth
           desc 'Authenticate a user',
-               named:   'authenticate',
-               success: { code: 201, model: API::V1::Entities::Auth }
+            named:   'authenticate',
+            success: { code: 201, model: API::V1::Entities::Auth }
           params do
             requires :username, type: String
             requires :password, type: String
-            requires :devise, type: Hash do
+            requires :device, type: Hash do
               requires :fingerprint, type: String
             end
           end

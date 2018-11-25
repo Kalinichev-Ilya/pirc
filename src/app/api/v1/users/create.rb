@@ -19,7 +19,7 @@ module API
 
             present ::User.create!(attributes).reload,
               with: API::V1::Entities::User
-            # TODO плюс возвращать токен
+            # TODO: плюс возвращать токен
           end
         end
       end

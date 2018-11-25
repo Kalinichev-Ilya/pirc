@@ -4,7 +4,7 @@ FactoryBot.define do
   factory :access_token do
     essence { Faker::Crypto.sha256 }
     fingerprint { rand(10000..999999) }
-    expires_at { Time.current + 1.hours }
+    expires_at { Time.current + 1.hour }
   end
 
   trait :expired do

@@ -3,12 +3,13 @@
 module Operations
   module Auth
     class Validate
-      attr_reader :username, :request_password, :device_params, :user
+      attr_reader :username, :request_password, :user, :ip, :fingerprint
 
-      def initialize(username:, request_password:, device_params:)
+      def initialize(username, request_password, device_params)
         @user = User.find_by!(username: username)
         @request_password = request_password
-        @device_params = device_params
+        @ip = device_params[:ip]
+        @fingerprint = device_params[:fingerprint]
       end
 
       def call
@@ -26,7 +27,8 @@ module Operations
       end
 
       def already_verified?
-        user&.token && user&.token.fingerprint == device_params[:fingerprint]
+        old_access_token = user&.access_token
+        old_access_token && old_access_token.fingerprint == fingerprint
       end
 
       def valid_password?
