@@ -5,11 +5,12 @@ module Operations
     class Validate
       attr_reader :username, :request_password, :user, :ip, :fingerprint
 
-      def initialize(username, request_password, device_params)
+      def initialize(username:, password:, device:)
         @user = User.find_by!(username: username)
-        @request_password = request_password
-        @ip = device_params[:ip]
-        @fingerprint = device_params[:fingerprint]
+        @request_password = password
+        @ip = device[:ip]
+        @fingerprint = device[:fingerprint]
+        @result = Result.new(nil, [])
       end
 
       def call
@@ -19,28 +20,38 @@ module Operations
       private
 
       def validate!
-        current_device? && valid_password? ? success : failure(:invalid_email_or_password)
-      end
+        return failure(:invalid_email_or_password) unless valid_password?
+        return failure(:device_verification_needed) unless valid_session?
 
-      def current_device?
-        already_verified? || failure(:device_verification_needed)
-      end
-
-      def already_verified?
-        old_access_token = user&.access_token
-        old_access_token && old_access_token.fingerprint == fingerprint
+        success
       end
 
       def valid_password?
         user.authenticate(request_password)
       end
 
+      def valid_session?
+        valid_token? && confirmed_device?
+      end
+
+      def valid_token?
+        return false unless user&.access_token
+
+        user.access_token.active?
+      end
+
+      def confirmed_device?
+        return false unless user&.access_token
+
+        user.access_token.fingerprint == fingerprint
+      end
+
       def success
-        Result.new(user)
+        @result.new(user)
       end
 
       def failure(error)
-        Result.new(nil, error)
+        @result[:error] << error
       end
 
       Result = Struct.new(:user, :error)

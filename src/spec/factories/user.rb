@@ -2,19 +2,16 @@
 
 FactoryBot.define do
   factory :user, aliases: [:owner] do
-    # association :access_token
-
-    # access_token_id { access_token.id }
-
     username { Faker::Internet.user_name(4..15) }
     password { Faker::Internet.password(9, 18, true, true) }
 
-    trait :invalid do
-      username { 'min' }
+    trait :signed do
+      association :access_token
     end
 
-    trait :weak_pass do
-      password { 'qwerty123' }
+    trait :fool do
+      username { 'wha' }
+      password { 'whatever' }
     end
   end
 end

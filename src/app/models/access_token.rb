@@ -6,7 +6,7 @@ class AccessToken < ApplicationRecord
   validates :expires_at, presence: true
   validates :essence, presence: true, uniqueness: true
 
-  scope :active, -> { where('expires_at > ?', Time.current) }
+  scope :active, -> { where('expires_at > ?', Time.current - EXPIRES_IN) }
 
   def self.generate!(user, device_params)
     AccessToken.transaction do
@@ -20,11 +20,11 @@ class AccessToken < ApplicationRecord
     end
   end
 
-  private
-
   def active?
     expires_at > Time.current
   end
+
+  private
 
   def self.encrypt_essence(user, ip, time_stamp)
     essence_string = "#{user.username}:#{ip}:#{time_stamp}"

@@ -20,6 +20,6 @@ class User < ApplicationRecord
   def password_format
     return if PASSWORD_FORMAT.match(password)
 
-    errors.add(:password, "must contain letters, numbers and symbols: #{password}")
+    errors.add(:password, "must contain letters, numbers and symbols")
   end
 end
