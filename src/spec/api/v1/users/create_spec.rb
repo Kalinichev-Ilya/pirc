@@ -11,7 +11,12 @@ RSpec.describe API::V1::Users::Create do
 
   describe 'POST /api/v1/users' do
     context 'valid' do
-      let(:params) { attributes_for(:user) }
+      let(:user) { build(:user) }
+      let(:params) {
+        { username: user.username,
+          password: user.password,
+          password_confirmation: user.password }
+      }
 
       it 'returns code 201' do
         post '/api/v1/users', params
@@ -21,12 +26,12 @@ RSpec.describe API::V1::Users::Create do
     end
 
     context 'failure' do
-      let(:params) { attributes_for(:user, :invalid) }
+      let(:params) { attributes_for(:user, :dummy) }
 
-      it 'returns validation error status 422' do
+      it 'returns validation error status 400' do
         post '/api/v1/users', params
 
-        expect(last_response.status).to eq(422)
+        expect(last_response.status).to eq(400) # TODO: add error handling, 401
       end
     end
   end
