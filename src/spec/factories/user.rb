@@ -9,7 +9,7 @@ FactoryBot.define do
       association :access_token
     end
 
-    trait :fool do
+    trait :dummy do
       username { 'wha' }
       password { 'whatever' }
     end

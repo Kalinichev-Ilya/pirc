@@ -13,7 +13,7 @@ RSpec.describe User do
     end
 
     context 'with weak password' do
-      subject(:user) { build(:user, :weak_pass) }
+      subject(:user) { build(:user, password: '123qwerty') }
 
       it 'failure' do
         expect(user).to be_invalid

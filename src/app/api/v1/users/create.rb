@@ -7,7 +7,7 @@ module API
         version :v1 do
           # POST /api/v1/users
           desc 'Create new user account',
-            named:   'create',
+            named: 'create',
             success: { code: 201, model: API::V1::Entities::User }
           params do
             requires :username, type: String
@@ -16,10 +16,7 @@ module API
           end
           post do
             attributes = declared(params).to_h
-
-            present ::User.create!(attributes).reload,
-              with: API::V1::Entities::User
-            # TODO: плюс возвращать токен
+            present ::User.create!(attributes).reload, with: API::V1::Entities::User
           end
         end
       end

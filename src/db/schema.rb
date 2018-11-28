@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2018_09_05_201106) do
 
   create_table 'access_tokens', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
     t.string 'essence', null: false
-    t.string 'fingerprint', null: false
+    t.string 'fingerprint_hash', null: false
     t.string 'ip', null: false
     t.datetime 'expires_at', null: false
     t.datetime 'created_at', null: false

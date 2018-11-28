@@ -33,6 +33,8 @@ Metrics/LineLength:
 
 Metrics/BlockLength:
   Exclude:
+    - 'app/api/v1/auth/create.rb' # move errors into helper
+    - 'spec/**/*'
     - 'db/schema.rb'
 
 Rails:
@@ -45,6 +47,9 @@ Rails/ApplicationRecord:
 Rails/HttpPositionalArguments:
   Exclude:
     - 'spec/**/*'
+
+Rails/InverseOf:
+  Enabled: false
 
 Style/BlockDelimiters:
   Exclude:

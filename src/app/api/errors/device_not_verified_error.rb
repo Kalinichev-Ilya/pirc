@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module API
   module Errors
     class DeviceNotVerifiedError < BaseError
@@ -8,9 +10,9 @@ module API
       module V1
         def errors
           [
-              attribute: 'device',
-              code: code,
-              message: message
+            attribute: 'device',
+            code: code,
+            message: message
           ]
         end
 

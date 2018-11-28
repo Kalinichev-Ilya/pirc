@@ -10,7 +10,8 @@ module Operations
         @request_password = password
         @ip = device[:ip]
         @fingerprint = device[:fingerprint]
-        @result = Result.new(nil, [])
+        @result = Result.new(nil, nil)
+        @token = user&.access_token
       end
 
       def call
@@ -20,7 +21,7 @@ module Operations
       private
 
       def validate!
-        return failure(:device_verification_needed) unless valid_session?
+        return failure(:device_verification_needed) unless confirmed_device?
         return failure(:invalid_email_or_password) unless valid_password?
 
         success
@@ -30,21 +31,19 @@ module Operations
         user.authenticate(request_password)
       end
 
-      def valid_session?
-        valid_token? && confirmed_device?
+      def confirmed_device?
+        return false unless @token # first login
+        return false unless valid_token? # expired access token
+
+        @token.fingerprint_hash == encode(fingerprint) && @token.ip == ip
       end
 
       def valid_token?
-        return false unless user&.access_token
-
-        user.access_token.active?
+        @token.active?
       end
 
-      def confirmed_device?
-        return false unless user&.access_token
-
-        old_token = user.access_token
-        old_token.fingerprint == fingerprint && old_token.ip == ip
+      def encode(string)
+        Digest::SHA2.hexdigest(string)
       end
 
       def success
@@ -53,15 +52,15 @@ module Operations
       end
 
       def failure(error)
-        @result[:error] << error
+        @result[:error] = error
         @result
       end
 
-      def failure?
-        @result.error.any?
+      Result = Struct.new(:user, :error) do
+        def failure?
+          error.present?
+        end
       end
-
-      Result = Struct.new(:user, :error)
     end
   end
 end

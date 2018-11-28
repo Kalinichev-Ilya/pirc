@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module API
   module Errors
     class BaseError < StandardError
@@ -12,14 +14,13 @@ module API
       end
 
       def message
-        binding.pry
       end
 
       def to_h
         {
-            code: code,
-            attributes: attributes,
-            meta: meta
+          code: code,
+          attributes: attributes,
+          meta: meta
         }.compact
       end
     end

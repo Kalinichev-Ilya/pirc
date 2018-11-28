@@ -11,8 +11,6 @@ class User < ApplicationRecord
   validates :username, length: { minimum: 4, maximum: 15 }, presence: true
   validate :password_format
 
-  # TODO: create AccessToken and return in POST user/create
-
   private
 
   PASSWORD_FORMAT = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,64}$/

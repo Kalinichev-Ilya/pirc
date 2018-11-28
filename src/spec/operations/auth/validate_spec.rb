@@ -17,7 +17,7 @@ RSpec.describe Operations::Auth::Validate do
     }
 
     it 'returns failure :device_verification_needed' do
-      expect(described_class.new(**request_params).call.error).to include(:device_verification_needed)
+      expect(described_class.new(**request_params).call.error).to eq(:device_verification_needed)
     end
   end
 
@@ -29,13 +29,13 @@ RSpec.describe Operations::Auth::Validate do
         password: 'whatever',
         device: {
           ip: user.access_token.ip,
-          fingerprint: user.access_token.fingerprint
+          fingerprint: '12345'
         }
       }
     }
 
     it 'returns failure :invalid_email_or_password' do
-      expect(described_class.new(**request_params).call.error).to include(:invalid_email_or_password)
+      expect(described_class.new(**request_params).call.error).to eq(:invalid_email_or_password)
     end
   end
 
@@ -47,7 +47,7 @@ RSpec.describe Operations::Auth::Validate do
         password: user.password,
         device: {
           ip: user.access_token.ip,
-          fingerprint: user.access_token.fingerprint
+          fingerprint: '12345'
         }
       }
     }

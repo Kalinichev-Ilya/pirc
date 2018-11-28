@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module API
   module Errors
     class InvalidEmailOrPasswordError < BaseError
@@ -8,9 +10,9 @@ module API
       module V1
         def errors
           [
-              attribute: 'email_or_password',
-              code: code,
-              message: message
+            attribute: 'email_or_password',
+            code: code,
+            message: message
           ]
         end
 
