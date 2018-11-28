@@ -3,12 +3,10 @@
 module API
   module V1
     module Entities
-      module User
-        class V1 < Base
-          expose :id
-          expose :username
-          expose :password_digest
-        end
+      class User < Base
+        expose :id
+        expose :username
+        expose :password
       end
     end
   end

@@ -12,10 +12,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_05_201104) do
+ActiveRecord::Schema.define(version: 2018_09_05_201106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'pgcrypto'
   enable_extension 'plpgsql'
+
+  create_table 'access_tokens', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
+    t.string 'essence', null: false
+    t.string 'fingerprint_hash', null: false
+    t.string 'ip', null: false
+    t.datetime 'expires_at', null: false
+    t.datetime 'created_at', null: false
+    t.datetime 'updated_at', null: false
+    t.uuid 'user_id'
+    t.index ['user_id'], name: 'index_access_tokens_on_user_id'
+  end
 
   create_table 'channel_options', id: :uuid, default: -> { 'gen_random_uuid()' }, force: :cascade do |t|
     t.uuid 'user_id', null: false
@@ -55,6 +66,7 @@ ActiveRecord::Schema.define(version: 2018_09_05_201104) do
     t.index ['username'], name: 'index_users_on_username', unique: true
   end
 
+  add_foreign_key 'access_tokens', 'users'
   add_foreign_key 'channel_options', 'channels'
   add_foreign_key 'channel_options', 'users'
   add_foreign_key 'channels', 'users', column: 'owner_id'

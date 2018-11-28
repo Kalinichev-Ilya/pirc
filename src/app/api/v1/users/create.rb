@@ -7,17 +7,16 @@ module API
         version :v1 do
           # POST /api/v1/users
           desc 'Create new user account',
-            named:   'create',
-            success: { code: 201, model: API::V1::Entities::User::V1 }
+            named: 'create',
+            success: { code: 201, model: API::V1::Entities::User }
           params do
             requires :username, type: String
-            requires :password_digest, type: String
+            requires :password, type: String
+            requires :password_confirmation, type: String
           end
           post do
             attributes = declared(params).to_h
-
-            present ::User.create!(attributes).reload,
-              with: API::V1::Entities::User::V1
+            present ::User.create!(attributes).reload, with: API::V1::Entities::User
           end
         end
       end

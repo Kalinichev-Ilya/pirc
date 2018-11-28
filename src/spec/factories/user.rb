@@ -3,10 +3,15 @@
 FactoryBot.define do
   factory :user, aliases: [:owner] do
     username { Faker::Internet.user_name(4..15) }
-    password_digest { Faker::Internet.password }
+    password { 'wHaT3vEr!' + Faker::Internet.password(8, 55, true, true) }
 
-    trait :invalid do
-      username { 'min' }
+    trait :signed do
+      association :access_token
+    end
+
+    trait :dummy do
+      username { 'wha' }
+      password { 'whatever' }
     end
   end
 end
