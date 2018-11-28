@@ -35,6 +35,16 @@ RSpec.describe API::V1::Auth::Create do
 
         expect(last_response.status).to eq(401)
       end
+
+      context 'with wrong password' do
+        let(:sign_in_params) { { username: user.username, password: 'wH4t3ver!' } }
+
+        it 'get 401 for :invalid_email_or_password error' do
+          post '/api/v1/auth', params
+
+          expect(last_response.status).to eq(401)
+        end
+      end
     end
   end
 end
