@@ -5,10 +5,6 @@ FactoryBot.define do
     username { Faker::Internet.user_name(4..15) }
     password { 'wHaT3vEr!' + Faker::Internet.password(8, 55, true, true) }
 
-    trait :signed do
-      association :access_token
-    end
-
     trait :dummy do
       username { 'wha' }
       password { 'whatever' }
