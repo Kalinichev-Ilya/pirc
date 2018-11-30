@@ -12,13 +12,12 @@ module API
 
             Operations::Auth::Validate.new(
               username: params[:username],
-              password: params[:password],
-              device: params[:device].symbolize_keys
+              password: params[:password]
             ).call
           end
 
           def create_access_token!(user)
-            AccessToken.generate!(user, device_params)
+            AccessToken.new.generate!(user)
           end
 
           def device_params
@@ -26,6 +25,7 @@ module API
               fingerprint: params['device']['fingerprint'] }
           end
 
+          # TODO: move to global helpers
           def authenticator_error(status)
             type = case status.to_sym
                    when :device_verification_needed
@@ -43,7 +43,11 @@ module API
           # POST /api/v1/auth
           desc 'Authenticate a user',
             named: 'authenticate',
-            success: { code: 201, model: API::V1::Entities::Auth }
+            success: { code: 201, model: API::V1::Entities::Auth },
+            failure: [
+              { code: 401, model: API::Errors::UnexpectedError },
+              { code: 401, model: API::Errors::InvalidEmailOrPasswordError }
+            ]
           params do
             requires :username, type: String
             requires :password, type: String

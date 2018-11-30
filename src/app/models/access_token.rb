@@ -3,34 +3,65 @@
 class AccessToken < ApplicationRecord
   EXPIRES_IN = 1.hour
 
+  attr_accessor :essence, :refresh_token
+
+  belongs_to :user, required: true
+
   validates :expires_at, presence: true
-  validates :essence, presence: true, uniqueness: true
+  validates :essence_hash, presence: true, uniqueness: true
+  validates :refresh_token_hash, presence: true, uniqueness: true
 
-  scope :active, -> { where('expires_at > ?', Time.current - EXPIRES_IN) }
+  scope :active, -> { where('expires_at > ?', Time.current) }
 
-  def self.generate!(user, device_params)
+  def generate!(user)
     AccessToken.transaction do
-      time_current = Time.current
-      ip = device_params[:ip]
+      generate_essence
+      generate_refresh_token
+      generate_expiration_time
 
-      essence_hash = encrypt_essence(user, ip, time_current.to_i)
-      fingerprint_hash = encode(device_params[:fingerprint].to_s)
-      expires_at = time_current + EXPIRES_IN
+      self.user = user
+      save!
 
-      AccessToken.create!(essence: essence_hash, fingerprint_hash: fingerprint_hash, ip: ip, expires_at: expires_at)
+      self
     end
+  end
+
+  def self.find_through_encode(essence)
+    essence_hash = AccessToken.new.encode(essence)
+    find_by(essence_hash: essence_hash)
+  end
+
+  def valid_refresh_token?(refresh_token)
+    refresh_token_hash = encode(refresh_token)
+    self.refresh_token_hash == refresh_token_hash
+  end
+
+  def refresh!
+    update!(expires_at: EXPIRES_IN.since)
+    self
+  end
+
+  def encode(string)
+    Digest::SHA2.hexdigest(string)
+  end
+
+  private
+
+  def generate_essence
+    self.essence = SecureRandom.hex
+    self.essence_hash = encode(essence)
+  end
+
+  def generate_refresh_token
+    self.refresh_token = SecureRandom.hex
+    self.refresh_token_hash = encode(refresh_token)
+  end
+
+  def generate_expiration_time
+    self.expires_at = EXPIRES_IN.since
   end
 
   def active?
     expires_at > Time.current
-  end
-
-  def self.encode(string)
-    Digest::SHA2.hexdigest(string)
-  end
-
-  def self.encrypt_essence(user, ip, time_stamp)
-    essence_string = "#{user.username}:#{ip}:#{time_stamp}"
-    encode(essence_string)
   end
 end
