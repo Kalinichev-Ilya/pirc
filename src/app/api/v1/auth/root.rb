@@ -8,6 +8,7 @@ module API
 
         namespace :auth do
           mount Auth::Create
+          mount Auth::Refresh
         end
       end
     end

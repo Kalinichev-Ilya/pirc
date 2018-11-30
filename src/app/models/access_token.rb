@@ -26,6 +26,25 @@ class AccessToken < ApplicationRecord
     end
   end
 
+  def self.find_with_encode(essence)
+    essence_hash = AccessToken.new.encode(essence)
+    find_by(essence_hash: essence_hash)
+  end
+
+  def valid_refresh_token?(refresh_token)
+    refresh_token_hash = encode(refresh_token)
+    self.refresh_token_hash == refresh_token_hash
+  end
+
+  def refresh
+    update(expires_at: Time.current + EXPIRES_IN)
+    self
+  end
+
+  def encode(string)
+    Digest::SHA2.hexdigest(string)
+  end
+
   private
 
   def generate_essence
@@ -45,13 +64,5 @@ class AccessToken < ApplicationRecord
 
   def active?
     expires_at > Time.current
-  end
-
-  def refresh
-    self.expires_at = Time.current
-  end
-
-  def encode(string)
-    Digest::SHA2.hexdigest(string)
   end
 end

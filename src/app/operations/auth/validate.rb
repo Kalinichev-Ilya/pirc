@@ -3,13 +3,11 @@
 module Operations
   module Auth
     class Validate
-      attr_reader :username, :request_password, :user, :ip, :fingerprint
+      attr_reader :user, :request_password
 
-      def initialize(username:, password:, device:)
+      def initialize(username:, password:)
         @user = User.find_by!(username: username)
         @request_password = password
-        @ip = device[:ip]
-        @fingerprint = device[:fingerprint]
       end
 
       def call
