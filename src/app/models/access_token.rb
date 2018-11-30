@@ -36,8 +36,8 @@ class AccessToken < ApplicationRecord
     self.refresh_token_hash == refresh_token_hash
   end
 
-  def refresh
-    update(expires_at: Time.current + EXPIRES_IN)
+  def refresh!
+    update!(expires_at: EXPIRES_IN.since)
     self
   end
 
@@ -58,8 +58,7 @@ class AccessToken < ApplicationRecord
   end
 
   def generate_expiration_time
-    time_current = Time.current
-    self.expires_at = time_current + EXPIRES_IN
+    self.expires_at = EXPIRES_IN.since
   end
 
   def active?

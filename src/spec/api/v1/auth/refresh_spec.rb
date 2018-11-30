@@ -10,12 +10,12 @@ RSpec.describe API::V1::Auth::Refresh do
   end
 
   describe 'POST /api/v1/auth/refresh' do
-    let(:access_token) do
+    before do
       create(
         :access_token,
         essence_hash: Digest::SHA2.hexdigest('valid_essence'),
         refresh_token_hash: Digest::SHA2.hexdigest('valid_refresh_token'),
-        expires_at: Time.current + 1.hour
+        expires_at: 1.hour.since
       )
     end
 

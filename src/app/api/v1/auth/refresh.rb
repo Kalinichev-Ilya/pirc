@@ -10,7 +10,7 @@ module API
           end
 
           def valid_token?
-            access_token && access_token&.valid_refresh_token?(declared(params)[:refresh_token])
+            access_token&.valid_refresh_token?(declared(params)[:refresh_token])
           end
         end
 
@@ -26,7 +26,7 @@ module API
             end
             post do
               error! API::Errors::ForbiddenError.new, 403 unless valid_token?
-              present access_token.refresh, with: API::V1::Entities::Auth
+              present access_token.refresh!, with: API::V1::Entities::Auth
             end
           end
         end
