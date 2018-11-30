@@ -26,7 +26,7 @@ class AccessToken < ApplicationRecord
     end
   end
 
-  def self.find_with_encode(essence)
+  def self.find_through_encode(essence)
     essence_hash = AccessToken.new.encode(essence)
     find_by(essence_hash: essence_hash)
   end
