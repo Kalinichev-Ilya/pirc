@@ -6,7 +6,7 @@ module API
       class Refresh < Grape::API
         helpers do
           def access_token
-            @access_token ||= AccessToken.find_through_encode(headers['X-Auth-Token'])
+            current_access_token
           end
 
           def valid_token?
