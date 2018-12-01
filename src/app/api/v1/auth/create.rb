@@ -17,25 +17,12 @@ module API
           end
 
           def create_access_token!(user)
-            AccessToken.new.generate!(user)
+            Operations::AccessToken::Generate.new(user).call
           end
 
           def device_params
             { ip: request.ip,
               fingerprint: params['device']['fingerprint'] }
-          end
-
-          # TODO: move to global helpers
-          def authenticator_error(status)
-            type = case status.to_sym
-                   when :device_verification_needed
-                     API::Errors::DeviceNotVerifiedError
-                   when :invalid_email_or_password
-                     API::Errors::InvalidEmailOrPasswordError
-                   else
-                     API::Errors::UnexpectedError
-                   end
-            type.new(status)
           end
         end
 

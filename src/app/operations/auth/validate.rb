@@ -11,16 +11,12 @@ module Operations
       end
 
       def call
-        validate!
-      end
-
-      private
-
-      def validate!
         return failure(:invalid_email_or_password) unless valid_password?
 
         success
       end
+
+      private
 
       def valid_password?
         user.authenticate(request_password)

@@ -4,6 +4,8 @@ class Root < Grape::API
   include API::V1::Errors
   include API::V1::Helpers::ErrorHandler
 
+  include API::V1::Helpers::Base
+
   prefix :api
 
   format :json

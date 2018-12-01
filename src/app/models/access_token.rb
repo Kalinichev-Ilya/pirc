@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class AccessToken < ApplicationRecord
-  EXPIRES_IN = 1.hour
-
   attr_accessor :essence, :refresh_token
 
   belongs_to :user, required: true
@@ -13,52 +11,19 @@ class AccessToken < ApplicationRecord
 
   scope :active, -> { where('expires_at > ?', Time.current) }
 
-  def generate!(user)
-    AccessToken.transaction do
-      generate_essence
-      generate_refresh_token
-      generate_expiration_time
-
-      self.user = user
-      save!
-
-      self
-    end
-  end
-
   def self.find_through_encode(essence)
-    essence_hash = AccessToken.new.encode(essence)
+    essence_hash = Helpers::Encryptor.encode(essence)
     find_by(essence_hash: essence_hash)
   end
 
   def valid_refresh_token?(refresh_token)
-    refresh_token_hash = encode(refresh_token)
+    refresh_token_hash = Helpers::Encryptor.encode(refresh_token)
     self.refresh_token_hash == refresh_token_hash
   end
 
   def refresh!
-    update!(expires_at: EXPIRES_IN.since)
+    update!(expires_at: 1.hour.since)
     self
-  end
-
-  def encode(string)
-    Digest::SHA2.hexdigest(string)
-  end
-
-  private
-
-  def generate_essence
-    self.essence = SecureRandom.hex
-    self.essence_hash = encode(essence)
-  end
-
-  def generate_refresh_token
-    self.refresh_token = SecureRandom.hex
-    self.refresh_token_hash = encode(refresh_token)
-  end
-
-  def generate_expiration_time
-    self.expires_at = EXPIRES_IN.since
   end
 
   def active?
