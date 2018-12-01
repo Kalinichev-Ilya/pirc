@@ -21,7 +21,7 @@ module Operations
           params[:essence] = SecureRandom.hex
           params[:essence_hash] = Helpers::Encryptor.encode(params[:essence])
           params[:refresh_token] = SecureRandom.hex
-          params[:refresh_token_hash] = Helpers::Encryptor.encode(params[:essence])
+          params[:refresh_token_hash] = Helpers::Encryptor.encode(params[:refresh_token])
           params[:expires_at] = 1.hour.since
         end
       end

@@ -2,7 +2,7 @@
 
 module API
   module Errors
-    class DeviceNotVerifiedError < BaseError
+    class ChannelAlreadyExistError < BaseError
       def code
         :channel_already_exist
       end

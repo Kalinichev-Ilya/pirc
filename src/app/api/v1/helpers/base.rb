@@ -39,7 +39,7 @@ module API
             private
 
             def fetch_user(access_token)
-              access_token.user.tap { |user| check_active!(user) }
+              access_token.user
             end
           end
         end

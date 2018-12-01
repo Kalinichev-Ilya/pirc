@@ -29,7 +29,11 @@ module Operations
         Result.new(nil, error)
       end
 
-      Result = Struct.new(:channel, :error)
+      Result = Struct.new(:channel, :error) do
+        def failure?
+          error.present?
+        end
+      end
     end
   end
 end
