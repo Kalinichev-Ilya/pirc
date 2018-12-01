@@ -2,15 +2,15 @@
 
 module API
   module Errors
-    class UnauthorizedError < BaseError
+    class DeviceNotVerifiedError < BaseError
       def code
-        :unauthorized
+        :channel_already_exist
       end
 
       module V1
         def errors
           [
-            attribute: 'unauthorized',
+            attribute: 'channel_already_exist',
             code: code,
             message: message
           ]

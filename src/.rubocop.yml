@@ -33,7 +33,7 @@ Metrics/LineLength:
 
 Metrics/BlockLength:
   Exclude:
-    - 'app/api/v1/auth/create.rb' # move errors into helper
+    - 'app/api/v1/helpers/base.rb'
     - 'spec/**/*'
     - 'db/schema.rb'
 

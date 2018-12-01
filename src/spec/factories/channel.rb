@@ -2,9 +2,7 @@
 
 FactoryBot.define do
   factory :channel do
-    association :owner
-
-    name { 'whatever' }
-    owner_id { owner.id }
+    owner
+    name { Faker::RickAndMorty.name }
   end
 end

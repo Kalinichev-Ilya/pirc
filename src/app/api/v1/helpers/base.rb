@@ -16,7 +16,7 @@ module API
               @current_user ||= current_access_token && fetch_user(current_access_token)
             end
 
-            def authenticator_error(status)
+            def authenticator_error(status) # rubocop:disable MethodLength
               type = case status.to_sym
                      when :device_verification_needed
                        API::Errors::DeviceNotVerifiedError
@@ -24,6 +24,8 @@ module API
                        API::Errors::InvalidEmailOrPasswordError
                      when :unauthorized
                        API::Errors::UnauthorizedError
+                     when :channel_already_exist
+                       API::Errors::ChannelAlreadyExistError
                      else
                        API::Errors::UnexpectedError
                      end
