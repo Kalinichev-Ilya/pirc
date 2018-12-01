@@ -17,7 +17,7 @@ module API
           end
 
           def create_access_token!(user)
-            AccessToken.new.generate!(user)
+            Operations::AccessToken::Generate.new(user).call
           end
 
           def device_params
