@@ -9,7 +9,7 @@ module API
         expose :name, as: :channel_name
 
         expose :users do |instance|
-          API::V1::Entities::User.represent(instance.items)
+          API::V1::Entities::User.represent(instance.users)
         end
       end
     end

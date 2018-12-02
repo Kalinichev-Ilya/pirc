@@ -9,6 +9,16 @@ module API
             authenticate!
           end
 
+          helpers do
+            def channel
+              Channel.find_by!(owner: current_user, id: params[:id])
+            end
+
+            def user
+              User.find(declared(params)[:user_id])
+            end
+          end
+
           version :v1 do
             # POST /api/v1/channel/:channel_id/membership
             desc 'Invite user in channel',
@@ -24,7 +34,7 @@ module API
             end
 
             post do
-              result = Operations::Membership::Create.new(channel, user).call
+              result = Operations::Membership::Create.new(user, channel).call
               error! authenticator_error(result.error), 401 if result.failure?
               present result.channel, with: API::V1::Entities::Channel
             end
