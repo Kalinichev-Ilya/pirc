@@ -8,6 +8,10 @@ module API
 
         namespace :channel do
           mount Channels::Create
+
+          route_param :id do
+            mount Channels::Memberships::Root
+          end
         end
       end
     end

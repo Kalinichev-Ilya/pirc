@@ -6,7 +6,6 @@ module API
       class User < Base
         expose :id
         expose :username
-        expose :password
       end
     end
   end
