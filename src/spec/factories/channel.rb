@@ -3,6 +3,7 @@
 FactoryBot.define do
   factory :channel do
     owner
+
     name { Faker::RickAndMorty.name }
   end
 end

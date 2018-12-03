@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Operation
+module Operations
   module Membership
     class Create
       attr_reader :user, :channel
@@ -11,8 +11,10 @@ module Operation
       end
 
       def call
-        Membership.create!(channel: channel, user: user)
-      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+        membership = ::Membership.create!(channel: channel, user: user)
+
+        success(membership.channel)
+      rescue ActiveRecord::RecordNotUnique
         failure(:member_exist)
       end
 
