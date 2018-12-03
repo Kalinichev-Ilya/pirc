@@ -16,7 +16,7 @@ module API
               @current_user ||= current_access_token && fetch_user(current_access_token)
             end
 
-            def authenticator_error(status) # rubocop:disable MethodLength
+            def authenticator_error(status) # rubocop:disable MethodLength CyclomaticComplexity
               type = case status.to_sym
                      when :device_verification_needed
                        API::Errors::DeviceNotVerifiedError
@@ -26,6 +26,10 @@ module API
                        API::Errors::UnauthorizedError
                      when :channel_already_exist
                        API::Errors::ChannelAlreadyExistError
+                     when :member_exist
+                       API::Errors::MemberExistError
+                     when :user_not_a_member
+                       API::Errors::UserNotAMemberError
                      else
                        API::Errors::UnexpectedError
                      end
