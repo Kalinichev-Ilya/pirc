@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  has_many :memberships, dependent: :destroy
   has_many :channels, through: :memberships
   has_many :messages, dependent: :destroy
-
   has_many :access_tokens, dependent: :destroy
 
   has_secure_password

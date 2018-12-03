@@ -7,6 +7,10 @@ module API
         expose :id
         expose :owner_id
         expose :name, as: :channel_name
+
+        expose :users do |instance|
+          API::V1::Entities::User.represent(instance.users)
+        end
       end
     end
   end

@@ -12,7 +12,7 @@ module Operations
 
       def call
         channel = ::Channel.create!(owner: owner, name: channel_name)
-        Membership.create!(channel: channel, user: owner)
+        Operations::Membership::Create.new(owner, channel).call
 
         success(channel)
       rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
