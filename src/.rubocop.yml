@@ -28,6 +28,10 @@ Lint/AmbiguousBlockAssociation:
   Exclude:
     - 'spec/**/*'
 
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - 'app/api/v1/helpers/base.rb'
+    
 Metrics/LineLength:
   Max: 190
 
