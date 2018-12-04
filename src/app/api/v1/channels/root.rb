@@ -12,6 +12,7 @@ module API
           route_param :id do
             mount Channels::Memberships::Root
             mount Channels::Messages::Root
+            mount Channels::Users::Root
           end
         end
       end
