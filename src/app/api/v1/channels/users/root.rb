@@ -3,11 +3,10 @@
 module API
   module V1
     module Channels
-      module Memberships
+      module Users
         class Root < Grape::API
-          namespace :membership do
-            mount Channels::Memberships::Create
-            mount Channels::Memberships::Update
+          namespace :users do
+            mount Channels::Users::Index
           end
         end
       end
