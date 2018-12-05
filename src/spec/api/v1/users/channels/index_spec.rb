@@ -2,14 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe API::V1::Channels::Users::Index do
+RSpec.describe API::V1::Users::Channels::Index do
   include Rack::Test::Methods
 
   def app
-    API::V1::Channels::Users::Index
+    API::V1::Users::Channels::Index
   end
 
-  describe 'GET /api/v1/channels/:id/users' do
+  describe 'GET /api/v1/user/:id/channels' do
     let(:essence) { Faker::RickAndMorty.quote }
     let(:refresh_token) { Faker::RickAndMorty.quote }
     let(:essence_hash) { Digest::SHA2.hexdigest(essence) }
@@ -23,10 +23,10 @@ RSpec.describe API::V1::Channels::Users::Index do
       )
     end
 
-    let(:owner) { create(:user, access_tokens: [access_token]) }
+    let(:owner) { create(:user) }
     let(:channel) { create(:channel, owner_id: owner.id) }
 
-    let(:user) { create(:user) }
+    let(:user) { create(:user, access_tokens: [access_token]) }
     let(:membership) { create(:membership, user_id: user.id, channel_id: channel.id) }
 
     context 'valid' do
@@ -34,20 +34,20 @@ RSpec.describe API::V1::Channels::Users::Index do
         membership
 
         header 'X-Auth-Token', essence
-        get "/api/v1/channel/#{channel.id}/users"
+        get "/api/v1/user/#{user.id}/channels"
 
         expect(last_response.status).to eq(200)
       end
     end
 
     context 'failure' do
-      let(:channel_id) { 'whatever' }
+      let(:user_id) { 'whatever' }
 
       it 'with wrong channel_id returns NotFound' do
         membership
 
         header 'X-Auth-Token', essence
-        get "/api/v1/channel/#{channel_id}/users"
+        get "/api/v1/user/#{user_id}/channels"
 
         expect(last_response.status).to eq(404)
       end

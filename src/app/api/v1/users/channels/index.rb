@@ -2,30 +2,29 @@
 
 module API
   module V1
-    module Channels
-      module Users
+    module Users
+      module Channels
         class Index < Grape::API
           before do
             authenticate!
           end
 
           helpers do
-            def users
-              Channel.find(params[:id]).users
+            def channels
+              User.find(params[:id]).channels
             end
           end
 
           version :v1 do
-            # GET /api/v1/channel/:channel_id/users
-            desc 'Get channel users list',
-              named: 'users list',
-              success: { code: 200, model: API::V1::Entities::User },
+            desc 'Get user channels list',
+              named: 'channel list',
+              success: { code: 201, model: API::V1::Entities::Channel },
               failure: [
                 { code: 401, model: API::Errors::UnauthorizedError },
                 { code: 401, model: API::Errors::UnexpectedError }
               ]
             get do
-              present users, with: API::V1::Entities::User
+              present channels, with: API::V1::Entities::Channel
             end
           end
         end
