@@ -7,6 +7,7 @@ module API
         class Root < Grape::API
           namespace :membership do
             mount Channels::Memberships::Create
+            mount Channels::Memberships::Update
           end
         end
       end
