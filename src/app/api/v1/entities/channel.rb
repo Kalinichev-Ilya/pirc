@@ -11,6 +11,10 @@ module API
         expose :users do |instance|
           API::V1::Entities::User.represent(instance.users)
         end
+
+        expose :messages do |instance|
+          API::V1::Entities::Message.represent(instance.message)
+        end
       end
     end
   end
