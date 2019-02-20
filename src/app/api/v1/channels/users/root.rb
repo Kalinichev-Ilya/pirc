@@ -6,7 +6,7 @@ module API
       module Users
         class Root < Grape::API
           namespace :users do
-            mount Channels::Users::Index
+            mount Users::Index
           end
         end
       end

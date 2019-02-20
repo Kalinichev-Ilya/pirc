@@ -6,7 +6,7 @@ module API
       module Messages
         class Root < Grape::API
           namespace :message do
-            mount Channels::Messages::Create
+            mount Messages::Create
           end
         end
       end

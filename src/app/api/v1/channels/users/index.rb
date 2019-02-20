@@ -19,13 +19,13 @@ module API
             # GET /api/v1/channel/:channel_id/users
             desc 'Get channel users list',
               named: 'users list',
-              success: { code: 201, model: API::V1::Entities::User },
+              success: { code: 200, model: API::V1::Entities::User },
               failure: [
                 { code: 401, model: API::Errors::UnauthorizedError },
                 { code: 401, model: API::Errors::UnexpectedError }
               ]
             get do
-              present users, API::V1::Entities::User
+              present users, with: API::V1::Entities::User
             end
           end
         end

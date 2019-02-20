@@ -6,8 +6,12 @@ module API
       class Root < Grape::API
         include API::V1::Entities
 
-        namespace :users do
+        namespace :user do
           mount Users::Create
+
+          route_param :id do
+            mount Users::Channels::Root
+          end
         end
       end
     end

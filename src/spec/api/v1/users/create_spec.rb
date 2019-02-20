@@ -9,7 +9,7 @@ RSpec.describe API::V1::Users::Create do
     API::V1::Users::Create
   end
 
-  describe 'POST /api/v1/users' do
+  describe 'POST /api/v1/user' do
     context 'valid' do
       let(:user) { build(:user) }
       let(:params) {
@@ -19,7 +19,7 @@ RSpec.describe API::V1::Users::Create do
       }
 
       it 'returns code 201' do
-        post '/api/v1/users', params
+        post '/api/v1/user', params
 
         expect(last_response.status).to eq(201)
       end
@@ -29,7 +29,7 @@ RSpec.describe API::V1::Users::Create do
       let(:params) { attributes_for(:user, :dummy) }
 
       it 'returns validation error status 400' do
-        post '/api/v1/users', params
+        post '/api/v1/user', params
 
         expect(last_response.status).to eq(400) # TODO: add error handling, 401
       end
